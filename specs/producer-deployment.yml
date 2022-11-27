@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: producer
+  labels:
+    name: producer
+spec:
+  ports:
+    - nodePort: 30162
+      port: 8081
+      targetPort: 8081
+      protocol: TCP
+  selector:
+    app: producer
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer
+spec:
+  selector:
+    matchLabels:
+      app: producer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: producer
+    spec:
+      containers:
+        - name: producer
+          image: emileyray/producer:latest
+          ports:
+            - containerPort: 8081

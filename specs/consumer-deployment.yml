@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: consumer
+  labels:
+    name: consumer
+spec:
+  ports:
+    - nodePort: 30163
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: consumer
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+spec:
+  selector:
+    matchLabels:
+      app: consumer
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      containers:
+        - name: consumer
+          image: emileyray/consumer:latest
+          ports:
+            - containerPort: 8080
